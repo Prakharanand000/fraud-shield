@@ -9,6 +9,7 @@
       --bg: #0b1020;
       --panel: #141b32;
       --panel-2: #1b2542;
+      --panel-3: #202d50;
       --text: #e8edf7;
       --muted: #93a0c0;
       --border: #27325a;
@@ -17,137 +18,257 @@
       --review: #f6b73c;
       --block: #ff5d6c;
     }
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background: radial-gradient(1200px 600px at 70% -10%, #1a2348 0%, transparent 60%), var(--bg);
-      background-color: var(--bg);
       color: var(--text);
       min-height: 100vh;
     }
-    .wrap { max-width: 880px; margin: 0 auto; padding: 40px 20px 64px; }
-    header { margin-bottom: 28px; }
-    .brand { display: flex; align-items: center; gap: 12px; }
+    .wrap { max-width: 980px; margin: 0 auto; padding: 36px 20px 64px; }
+
+    /* Header */
+    header { margin-bottom: 28px; display: flex; align-items: center; gap: 14px; }
     .logo {
-      width: 40px; height: 40px; border-radius: 10px;
-      background: linear-gradient(135deg, var(--accent), #9d6bff);
+      width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
+      background: linear-gradient(135deg, #5b8cff, #9d6bff);
       display: grid; place-items: center; font-size: 22px;
     }
-    h1 { font-size: 24px; margin: 0; letter-spacing: -0.02em; }
-    .sub { color: var(--muted); font-size: 14px; margin-top: 4px; }
-    .grid {
-      display: grid; grid-template-columns: 1.1fr 1fr; gap: 20px;
+    h1 { font-size: 26px; letter-spacing: -0.02em; }
+    .sub { color: var(--muted); font-size: 14px; margin-top: 3px; }
+
+    /* Layout */
+    .grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 20px; align-items: start; }
+    @media (max-width: 780px) { .grid { grid-template-columns: 1fr; } }
+
+    /* Card */
+    .card { background: var(--panel); border: 1px solid var(--border); border-radius: 18px; overflow: hidden; }
+
+    /* Tabs */
+    .tab-bar { display: flex; border-bottom: 1px solid var(--border); }
+    .tab {
+      flex: 1; padding: 13px 16px; font-size: 13px; font-weight: 600;
+      color: var(--muted); cursor: pointer; text-align: center;
+      border-bottom: 2px solid transparent; transition: all .15s;
+      background: none; border-top: none; border-left: none; border-right: none;
     }
-    @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
-    .card {
-      background: var(--panel); border: 1px solid var(--border);
-      border-radius: 16px; padding: 22px;
+    .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .tab:hover:not(.active) { color: var(--text); }
+
+    /* Tab content */
+    .tab-content { display: none; padding: 20px; }
+    .tab-content.active { display: block; }
+
+    /* Form */
+    .preset-row { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 18px; }
+    .chip {
+      font-size: 12px; padding: 5px 11px; border-radius: 999px; cursor: pointer;
+      background: var(--panel-2); border: 1px solid var(--border); color: var(--muted);
+      transition: all .15s; white-space: nowrap;
     }
-    .card h2 { font-size: 14px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 0 0 16px; }
-    .field { margin-bottom: 14px; }
-    label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+    .chip:hover { color: var(--text); border-color: var(--accent); }
+    .chip.approve { border-color: #1a7a5e; color: var(--approve); }
+    .chip.review { border-color: #7a6020; color: var(--review); }
+    .chip.block { border-color: #7a2530; color: var(--block); }
+
+    .field { margin-bottom: 13px; }
+    label { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); margin-bottom: 5px; }
+    .hint {
+      display: inline-block; width: 15px; height: 15px; border-radius: 50%;
+      background: var(--panel-3); border: 1px solid var(--border);
+      font-size: 10px; text-align: center; line-height: 14px; cursor: default;
+      color: var(--muted); flex-shrink: 0;
+    }
+    .hint[title]:hover { border-color: var(--accent); color: var(--accent); }
     input, select {
-      width: 100%; padding: 10px 12px; border-radius: 10px;
+      width: 100%; padding: 9px 12px; border-radius: 10px;
       background: var(--panel-2); border: 1px solid var(--border);
       color: var(--text); font-size: 14px; outline: none;
     }
     input:focus, select:focus { border-color: var(--accent); }
-    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .actions { display: flex; gap: 10px; margin-top: 18px; }
-    button {
-      flex: 1; padding: 12px 16px; border-radius: 10px; border: none;
+    .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
+    .actions { display: flex; gap: 9px; margin-top: 16px; }
+    button.primary {
+      flex: 1; padding: 12px; border-radius: 10px; border: none;
       font-size: 14px; font-weight: 600; cursor: pointer;
       background: var(--accent); color: white; transition: filter .15s;
     }
-    button:hover { filter: brightness(1.08); }
-    button.ghost { background: var(--panel-2); color: var(--text); border: 1px solid var(--border); }
-    .preset-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
-    .chip {
-      font-size: 12px; padding: 6px 11px; border-radius: 999px; cursor: pointer;
-      background: var(--panel-2); border: 1px solid var(--border); color: var(--muted);
+    button.primary:hover { filter: brightness(1.1); }
+    button.ghost {
+      padding: 12px 18px; border-radius: 10px; border: 1px solid var(--border);
+      font-size: 14px; font-weight: 600; cursor: pointer;
+      background: var(--panel-2); color: var(--text);
     }
-    .chip:hover { color: var(--text); border-color: var(--accent); }
-    .result-empty { color: var(--muted); font-size: 14px; line-height: 1.6; }
-    .decision {
-      font-size: 30px; font-weight: 800; letter-spacing: -0.02em; margin: 4px 0 2px;
-    }
-    .decision.APPROVE { color: var(--approve); }
-    .decision.REVIEW { color: var(--review); }
-    .decision.BLOCK { color: var(--block); }
-    .reason { color: var(--muted); font-size: 14px; margin-bottom: 18px; }
-    .meter { height: 12px; border-radius: 999px; background: var(--panel-2); overflow: hidden; border: 1px solid var(--border); }
-    .meter > div { height: 100%; transition: width .5s ease; }
-    .prob-line { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); margin: 14px 0 6px; }
-    .prob-val { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--text); }
-    .txid { font-size: 12px; color: var(--muted); margin-top: 16px; font-family: ui-monospace, "SF Mono", Menlo, monospace; }
-    .err { color: var(--block); font-size: 13px; margin-top: 12px; }
-    footer { margin-top: 28px; color: var(--muted); font-size: 12px; text-align: center; line-height: 1.7; }
-    code { background: var(--panel-2); padding: 2px 6px; border-radius: 6px; font-size: 12px; }
+    .err { color: var(--block); font-size: 13px; margin-top: 10px; }
     .spinner {
-      display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,.4);
-      border-top-color: white; border-radius: 50%; animation: spin .7s linear infinite; vertical-align: -2px;
+      display: inline-block; width: 13px; height: 13px;
+      border: 2px solid rgba(255,255,255,.3); border-top-color: white;
+      border-radius: 50%; animation: spin .7s linear infinite; vertical-align: -2px;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Guide tab */
+    .guide-section { margin-bottom: 22px; }
+    .guide-section h3 { font-size: 13px; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); margin-bottom: 12px; }
+    .param-list { display: flex; flex-direction: column; gap: 10px; }
+    .param {
+      background: var(--panel-2); border: 1px solid var(--border);
+      border-radius: 12px; padding: 12px 14px; display: flex; gap: 12px; align-items: flex-start;
+    }
+    .param-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+    .param-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+    .param-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+    .threshold-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .badge {
+      font-size: 12px; font-weight: 700; padding: 5px 12px;
+      border-radius: 999px; border: 1px solid;
+    }
+    .badge.approve { color: var(--approve); border-color: #1a7a5e; background: #0d3326; }
+    .badge.review  { color: var(--review);  border-color: #7a6020; background: #332810; }
+    .badge.block   { color: var(--block);   border-color: #7a2530; background: #33101a; }
+    .how-step { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 12px; }
+    .step-num {
+      width: 24px; height: 24px; border-radius: 50%; background: var(--accent);
+      color: white; font-size: 12px; font-weight: 700; display: grid; place-items: center; flex-shrink: 0;
+    }
+    .step-text { font-size: 13px; color: var(--muted); line-height: 1.6; padding-top: 3px; }
+    .step-text strong { color: var(--text); }
+
+    /* Decision panel */
+    .decision-header { padding: 20px 20px 0; }
+    .section-label { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 14px; }
+
+    .decision-empty { padding: 20px; }
+    .empty-hint { color: var(--muted); font-size: 14px; line-height: 1.7; }
+
+    .decision-result { padding: 0 20px 20px; }
+    .verdict { font-size: 32px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 4px; }
+    .verdict.APPROVE { color: var(--approve); }
+    .verdict.REVIEW  { color: var(--review); }
+    .verdict.BLOCK   { color: var(--block); }
+    .verdict-reason { color: var(--muted); font-size: 14px; margin-bottom: 18px; }
+    .prob-line { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); margin-bottom: 7px; }
+    .prob-val { font-weight: 700; color: var(--text); }
+    .meter { height: 10px; border-radius: 999px; background: var(--panel-2); overflow: hidden; border: 1px solid var(--border); margin-bottom: 6px; }
+    .meter > div { height: 100%; transition: width .5s ease; }
+    .threshold-marks { position: relative; height: 14px; margin-bottom: 16px; }
+    .mark { position: absolute; font-size: 10px; color: var(--muted); transform: translateX(-50%); }
+    .mark::before { content: '|'; display: block; text-align: center; margin-bottom: 1px; }
+    .txid { font-size: 11px; color: var(--muted); font-family: ui-monospace, "SF Mono", monospace; margin-bottom: 18px; }
+
+    .divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+
+    /* Risk factors */
+    .risk-factors { margin-bottom: 16px; }
+    .rf-title { font-size: 12px; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); margin-bottom: 10px; }
+    .rf-item { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 13px; }
+    .rf-icon { width: 20px; text-align: center; flex-shrink: 0; }
+    .rf-label { color: var(--muted); flex: 1; }
+    .rf-tag { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; }
+    .rf-tag.bad  { background: #33101a; color: var(--block);   border: 1px solid #7a2530; }
+    .rf-tag.warn { background: #332810; color: var(--review);  border: 1px solid #7a6020; }
+    .rf-tag.ok   { background: #0d3326; color: var(--approve); border: 1px solid #1a7a5e; }
+
+    /* Next steps */
+    .next-steps { }
+    .ns-title { font-size: 12px; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); margin-bottom: 10px; }
+    .ns-item { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 10px; }
+    .ns-num {
+      width: 20px; height: 20px; border-radius: 50%; font-size: 11px;
+      font-weight: 700; display: grid; place-items: center; flex-shrink: 0; margin-top: 1px;
+    }
+    .ns-num.approve { background: #0d3326; color: var(--approve); }
+    .ns-num.review  { background: #332810; color: var(--review); }
+    .ns-num.block   { background: #33101a; color: var(--block); }
+    .ns-text { font-size: 13px; color: var(--muted); line-height: 1.5; }
+    .ns-text strong { color: var(--text); }
+
+    footer { margin-top: 28px; color: var(--muted); font-size: 12px; text-align: center; line-height: 1.8; }
+    code { background: var(--panel-2); padding: 2px 7px; border-radius: 6px; font-size: 11px; font-family: ui-monospace, monospace; }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <div class="brand">
-        <div class="logo">🛡️</div>
-        <div>
-          <h1>FraudShield</h1>
-          <div class="sub">Real-time transaction risk scoring · Spring Boot + ML</div>
-        </div>
-      </div>
-    </header>
+<div class="wrap">
+  <header>
+    <div class="logo">🛡️</div>
+    <div>
+      <h1>FraudShield</h1>
+      <div class="sub">Real-time transaction risk scoring · Spring Boot + RandomForest ML</div>
+    </div>
+  </header>
 
-    <div class="grid">
-      <div class="card">
-        <h2>Transaction</h2>
+  <div class="grid">
+
+    <!-- LEFT PANEL -->
+    <div class="card">
+      <div class="tab-bar">
+        <button class="tab active" data-tab="form">Score a Transaction</button>
+        <button class="tab" data-tab="guide">How It Works</button>
+      </div>
+
+      <!-- FORM TAB -->
+      <div class="tab-content active" id="tab-form">
         <div class="preset-row">
-          <span class="chip" data-preset="low">↘ Low-risk example</span>
-          <span class="chip" data-preset="high">↗ High-risk example</span>
+          <span class="chip approve" data-preset="normal">✓ Normal purchase</span>
+          <span class="chip review" data-preset="suspicious">⚠ Suspicious</span>
+          <span class="chip block" data-preset="high">✕ Stolen card</span>
+          <span class="chip block" data-preset="velocity">✕ Velocity fraud</span>
+          <span class="chip review" data-preset="newaccount">⚠ New account</span>
+          <span class="chip approve" data-preset="travel">✓ Legit travel</span>
         </div>
+
         <form id="txn-form">
-          <div class="row">
+          <div class="row-2">
             <div class="field">
               <label>Transaction ID</label>
               <input id="transactionId" value="txn-001" />
             </div>
             <div class="field">
-              <label>Amount</label>
+              <label>Amount ($)
+                <span class="hint" title="Transaction amount. Very large amounts (>$300) are a fraud signal.">?</span>
+              </label>
               <input id="amount" type="number" step="0.01" value="850" />
             </div>
           </div>
-          <div class="row">
+          <div class="row-2">
             <div class="field">
-              <label>Merchant category (0–9)</label>
+              <label>Merchant category (0–9)
+                <span class="hint" title="Encoded merchant type. 0=groceries, 4=electronics, 7=wire transfers, etc.">?</span>
+              </label>
               <input id="merchantCategory" type="number" min="0" max="9" value="4" />
             </div>
             <div class="field">
-              <label>Hour of day (0–23)</label>
+              <label>Hour of day (0–23)
+                <span class="hint" title="Time of transaction. Hours 0–4 (late night) are a fraud signal.">?</span>
+              </label>
               <input id="hourOfDay" type="number" min="0" max="23" value="3" />
             </div>
           </div>
-          <div class="row">
+          <div class="row-2">
             <div class="field">
-              <label>Days since last txn</label>
+              <label>Days since last txn
+                <span class="hint" title="Days since the account last had activity. 0 = transacted today already.">?</span>
+              </label>
               <input id="daysSinceLastTxn" type="number" min="0" value="1" />
             </div>
             <div class="field">
-              <label>Txns in last 24h</label>
+              <label>Txns in last 24h
+                <span class="hint" title="How many purchases in the past 24 hours. >6 is a velocity fraud signal.">?</span>
+              </label>
               <input id="numTxns24h" type="number" min="0" value="9" />
             </div>
           </div>
-          <div class="row">
+          <div class="row-2">
             <div class="field">
-              <label>Account age (days)</label>
+              <label>Account age (days)
+                <span class="hint" title="Age of the account. Accounts <30 days old spending large amounts are suspicious.">?</span>
+              </label>
               <input id="accountAgeDays" type="number" min="0" value="12" />
             </div>
             <div class="field">
-              <label>Cross-border?</label>
+              <label>Cross-border?
+                <span class="hint" title="Whether the transaction is from a foreign country.">?</span>
+              </label>
               <select id="isForeign">
                 <option value="true">Yes (foreign)</option>
                 <option value="false">No (domestic)</option>
@@ -155,108 +276,329 @@
             </div>
           </div>
           <div class="actions">
-            <button type="submit" id="submit-btn">Assess risk</button>
+            <button type="submit" class="primary" id="submit-btn">Assess risk</button>
             <button type="button" class="ghost" id="reset-btn">Reset</button>
           </div>
           <div class="err" id="error"></div>
         </form>
       </div>
 
-      <div class="card">
-        <h2>Decision</h2>
-        <div id="result">
-          <div class="result-empty">
-            Enter a transaction and click <strong>Assess risk</strong>.<br /><br />
-            The request is scored by the ML model, then the API applies the risk
-            policy:<br />
-            <code>≥ 0.80 → BLOCK</code><br />
-            <code>≥ 0.50 → REVIEW</code><br />
-            <code>&lt; 0.50 → APPROVE</code>
+      <!-- GUIDE TAB -->
+      <div class="tab-content" id="tab-guide">
+        <div class="guide-section">
+          <h3>What does FraudShield do?</h3>
+          <div class="how-step">
+            <div class="step-num">1</div>
+            <div class="step-text">You submit a transaction with 8 features describing it (amount, time, account age, etc.)</div>
+          </div>
+          <div class="how-step">
+            <div class="step-num">2</div>
+            <div class="step-text">A <strong>RandomForest ML model</strong> (100 decision trees, trained on 10,000 synthetic transactions) outputs a fraud probability between 0% and 100%</div>
+          </div>
+          <div class="how-step">
+            <div class="step-num">3</div>
+            <div class="step-text">The <strong>decision engine</strong> applies risk thresholds and returns a verdict:</div>
+          </div>
+          <div class="threshold-row" style="margin: 8px 0 0 36px;">
+            <span class="badge block">≥ 80% → BLOCK</span>
+            <span class="badge review">≥ 50% → REVIEW</span>
+            <span class="badge approve">&lt; 50% → APPROVE</span>
+          </div>
+        </div>
+
+        <div class="guide-section">
+          <h3>What each parameter means</h3>
+          <div class="param-list">
+            <div class="param">
+              <div class="param-icon">💰</div>
+              <div>
+                <div class="param-name">Amount</div>
+                <div class="param-desc">The transaction dollar value. Amounts over $300 are a fraud signal — fraudsters try to maximise what they steal quickly.</div>
+              </div>
+            </div>
+            <div class="param">
+              <div class="param-icon">🏪</div>
+              <div>
+                <div class="param-name">Merchant Category (0–9)</div>
+                <div class="param-desc">Encoded store type. 0 = groceries, 4 = electronics, 7 = wire/cash, 9 = luxury. Some categories are higher risk than others.</div>
+              </div>
+            </div>
+            <div class="param">
+              <div class="param-icon">🕐</div>
+              <div>
+                <div class="param-name">Hour of Day</div>
+                <div class="param-desc">What time the transaction happened (0–23). Purchases at 2–4am are suspicious — your card owner is probably asleep.</div>
+              </div>
+            </div>
+            <div class="param">
+              <div class="param-icon">📅</div>
+              <div>
+                <div class="param-name">Days Since Last Transaction</div>
+                <div class="param-desc">How long the account was quiet before this purchase. A dormant account suddenly making purchases = possible stolen card.</div>
+              </div>
+            </div>
+            <div class="param">
+              <div class="param-icon">⚡</div>
+              <div>
+                <div class="param-name">Transactions in Last 24h</div>
+                <div class="param-desc">Number of purchases today. More than 6 suggests velocity fraud — someone is burning through a stolen card as fast as possible.</div>
+              </div>
+            </div>
+            <div class="param">
+              <div class="param-icon">🌍</div>
+              <div>
+                <div class="param-name">Cross-border (isForeign)</div>
+                <div class="param-desc">Is the transaction from outside the account's home country? A domestic account suddenly buying abroad is a classic red flag.</div>
+              </div>
+            </div>
+            <div class="param">
+              <div class="param-icon">🗓️</div>
+              <div>
+                <div class="param-name">Account Age (days)</div>
+                <div class="param-desc">How old the account is. Brand new accounts (under 30 days) making large purchases are disproportionately fraudulent.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="guide-section">
+          <h3>Try these scenarios</h3>
+          <div class="param-list">
+            <div class="param" style="cursor:pointer" onclick="activatePreset('normal')">
+              <div class="param-icon">✅</div>
+              <div>
+                <div class="param-name" style="color:var(--approve)">Normal Purchase</div>
+                <div class="param-desc">$35 at a grocery store, 2pm, 3-year-old account, domestic. Should APPROVE.</div>
+              </div>
+            </div>
+            <div class="param" style="cursor:pointer" onclick="activatePreset('velocity')">
+              <div class="param-icon">⚡</div>
+              <div>
+                <div class="param-name" style="color:var(--block)">Velocity Fraud</div>
+                <div class="param-desc">15 transactions in 24h, large amounts. Someone is burning through a stolen card. Should BLOCK.</div>
+              </div>
+            </div>
+            <div class="param" style="cursor:pointer" onclick="activatePreset('newaccount')">
+              <div class="param-icon">🆕</div>
+              <div>
+                <div class="param-name" style="color:var(--review)">Suspicious New Account</div>
+                <div class="param-desc">5-day-old account making a $600 purchase. Might be real, might be mule account. Should REVIEW.</div>
+              </div>
+            </div>
+            <div class="param" style="cursor:pointer" onclick="activatePreset('travel')">
+              <div class="param-icon">✈️</div>
+              <div>
+                <div class="param-name" style="color:var(--approve)">Legitimate Travel</div>
+                <div class="param-desc">Foreign transaction but mature account, low velocity, reasonable amount. Should APPROVE.</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <footer>
-      Polyglot microservice demo · Java API tier → Python ML inference · containerized with Docker, orchestrated on Kubernetes.<br />
-      API endpoint: <code>POST /api/v1/assess</code>
-    </footer>
+    <!-- RIGHT PANEL: DECISION -->
+    <div class="card" id="decision-card">
+      <div class="decision-header">
+        <div class="section-label">Decision</div>
+      </div>
+      <div id="result">
+        <div class="decision-empty">
+          <div class="empty-hint">
+            Enter a transaction and click <strong>Assess risk</strong> to see the ML model's verdict.<br /><br />
+            Or try one of the scenario presets on the left — each one illustrates a different fraud pattern.<br /><br />
+            The decision panel will show:<br />
+            · The risk verdict (BLOCK / REVIEW / APPROVE)<br />
+            · Fraud probability with visual meter<br />
+            · Which signals triggered the score<br />
+            · Recommended next steps
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
-  <script>
-    // Same-origin by default (works for both the Docker/Spring stack on :8080
-    // and the no-Docker quickstart). Override with ?api=http://host:port if needed.
-    const API_BASE = new URLSearchParams(location.search).get("api") || "";
+  <footer>
+    Polyglot microservice demo · Java API tier → Python ML inference · containerized with Docker, orchestrated on Kubernetes<br />
+    API: <code>POST /api/v1/assess</code> · GitHub: <code>Prakharanand000/fraud-shield</code>
+  </footer>
+</div>
 
-    const presets = {
-      low: { transactionId: "txn-low-01", amount: 42.5, merchantCategory: 2, hourOfDay: 14,
-             daysSinceLastTxn: 3, numTxns24h: 2, accountAgeDays: 900, isForeign: "false" },
-      high: { transactionId: "txn-high-01", amount: 1850, merchantCategory: 7, hourOfDay: 3,
-              daysSinceLastTxn: 0, numTxns24h: 11, accountAgeDays: 8, isForeign: "true" },
-    };
+<script>
+const API_BASE = new URLSearchParams(location.search).get("api") || "";
 
-    const $ = (id) => document.getElementById(id);
-    const fields = ["transactionId","amount","merchantCategory","hourOfDay",
-                    "daysSinceLastTxn","numTxns24h","accountAgeDays","isForeign"];
+const PRESETS = {
+  normal:     { transactionId:"txn-normal-01",   amount:35,    merchantCategory:0, hourOfDay:14, daysSinceLastTxn:3,  numTxns24h:1,  accountAgeDays:1100, isForeign:"false" },
+  suspicious: { transactionId:"txn-susp-01",     amount:480,   merchantCategory:7, hourOfDay:2,  daysSinceLastTxn:0,  numTxns24h:5,  accountAgeDays:22,   isForeign:"true"  },
+  high:       { transactionId:"txn-stolen-01",   amount:1850,  merchantCategory:7, hourOfDay:3,  daysSinceLastTxn:0,  numTxns24h:11, accountAgeDays:8,    isForeign:"true"  },
+  velocity:   { transactionId:"txn-velocity-01", amount:320,   merchantCategory:4, hourOfDay:1,  daysSinceLastTxn:0,  numTxns24h:15, accountAgeDays:45,   isForeign:"false" },
+  newaccount: { transactionId:"txn-new-01",      amount:600,   merchantCategory:4, hourOfDay:11, daysSinceLastTxn:1,  numTxns24h:3,  accountAgeDays:5,    isForeign:"false" },
+  travel:     { transactionId:"txn-travel-01",   amount:220,   merchantCategory:3, hourOfDay:15, daysSinceLastTxn:2,  numTxns24h:2,  accountAgeDays:900,  isForeign:"true"  },
+};
 
-    function applyPreset(name) {
-      const p = presets[name];
-      for (const k in p) $(k).value = p[k];
-    }
+const FIELDS = ["transactionId","amount","merchantCategory","hourOfDay","daysSinceLastTxn","numTxns24h","accountAgeDays","isForeign"];
+const $ = id => document.getElementById(id);
 
-    document.querySelectorAll(".chip").forEach((c) =>
-      c.addEventListener("click", () => applyPreset(c.dataset.preset))
-    );
+function applyPreset(name) {
+  const p = PRESETS[name];
+  FIELDS.forEach(k => $(k).value = p[k]);
+}
+function activatePreset(name) {
+  applyPreset(name);
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelector('[data-tab="form"]').classList.add('active');
+  $('tab-form').classList.add('active');
+}
 
-    $("reset-btn").addEventListener("click", () => applyPreset("high"));
+document.querySelectorAll('.chip[data-preset]').forEach(c =>
+  c.addEventListener('click', () => applyPreset(c.dataset.preset))
+);
 
-    $("txn-form").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      $("error").textContent = "";
-      const btn = $("submit-btn");
-      btn.disabled = true;
-      btn.innerHTML = '<span class="spinner"></span> Scoring…';
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    $('tab-' + tab.dataset.tab).classList.add('active');
+  });
+});
 
-      const payload = {
-        transactionId: $("transactionId").value,
-        amount: parseFloat($("amount").value),
-        merchantCategory: parseInt($("merchantCategory").value, 10),
-        hourOfDay: parseInt($("hourOfDay").value, 10),
-        daysSinceLastTxn: parseInt($("daysSinceLastTxn").value, 10),
-        numTxns24h: parseInt($("numTxns24h").value, 10),
-        isForeign: $("isForeign").value === "true",
-        accountAgeDays: parseInt($("accountAgeDays").value, 10),
-      };
+$('reset-btn').addEventListener('click', () => applyPreset('normal'));
 
-      try {
-        const res = await fetch(API_BASE + "/api/v1/assess", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
-        if (!res.ok) throw new Error("API returned " + res.status);
-        renderResult(await res.json());
-      } catch (err) {
-        $("error").textContent =
-          "Could not reach the scoring API. Is the service running? (" + err.message + ")";
-      } finally {
-        btn.disabled = false;
-        btn.textContent = "Assess risk";
-      }
+$('txn-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  $('error').textContent = '';
+  const btn = $('submit-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Scoring…';
+
+  const raw = {
+    transactionId: $('transactionId').value,
+    amount: parseFloat($('amount').value),
+    merchantCategory: parseInt($('merchantCategory').value, 10),
+    hourOfDay: parseInt($('hourOfDay').value, 10),
+    daysSinceLastTxn: parseInt($('daysSinceLastTxn').value, 10),
+    numTxns24h: parseInt($('numTxns24h').value, 10),
+    isForeign: $('isForeign').value === 'true',
+    accountAgeDays: parseInt($('accountAgeDays').value, 10),
+  };
+
+  try {
+    const res = await fetch(API_BASE + '/api/v1/assess', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(raw),
     });
+    if (!res.ok) throw new Error('API returned ' + res.status);
+    renderResult(await res.json(), raw);
+  } catch (err) {
+    $('error').textContent = 'Could not reach the scoring API. Is the service running? (' + err.message + ')';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Assess risk';
+  }
+});
 
-    function renderResult(r) {
-      const pct = (r.fraudProbability * 100).toFixed(1);
-      const color = r.decision === "APPROVE" ? "var(--approve)"
-                  : r.decision === "REVIEW" ? "var(--review)" : "var(--block)";
-      $("result").innerHTML = `
-        <div class="decision ${r.decision}">${r.decision}</div>
-        <div class="reason">${r.reason}</div>
-        <div class="prob-line"><span>Fraud probability</span><span class="prob-val">${pct}%</span></div>
-        <div class="meter"><div style="width:${pct}%;background:${color}"></div></div>
-        <div class="txid">txn: ${r.transactionId}</div>
-      `;
-    }
-  </script>
+function riskFactors(raw) {
+  const factors = [];
+  if (raw.amount > 300)        factors.push({ icon:'💰', label:'Large amount ($'+raw.amount+')', tag:'bad',  text:'HIGH RISK' });
+  else if (raw.amount > 100)   factors.push({ icon:'💰', label:'Moderate amount ($'+raw.amount+')', tag:'warn', text:'MODERATE' });
+  else                         factors.push({ icon:'💰', label:'Small amount ($'+raw.amount+')', tag:'ok',   text:'OK' });
+
+  if (raw.hourOfDay < 5)       factors.push({ icon:'🕐', label:'Late-night transaction ('+raw.hourOfDay+':00)', tag:'bad',  text:'HIGH RISK' });
+  else if (raw.hourOfDay > 21) factors.push({ icon:'🕐', label:'Late evening ('+raw.hourOfDay+':00)', tag:'warn', text:'MODERATE' });
+  else                         factors.push({ icon:'🕐', label:'Normal hours ('+raw.hourOfDay+':00)', tag:'ok',   text:'OK' });
+
+  if (raw.isForeign)           factors.push({ icon:'🌍', label:'Foreign / cross-border transaction', tag:'bad',  text:'HIGH RISK' });
+  else                         factors.push({ icon:'🌍', label:'Domestic transaction', tag:'ok',   text:'OK' });
+
+  if (raw.accountAgeDays < 14)  factors.push({ icon:'🗓️', label:'Very new account ('+raw.accountAgeDays+' days)', tag:'bad',  text:'HIGH RISK' });
+  else if (raw.accountAgeDays < 60) factors.push({ icon:'🗓️', label:'New account ('+raw.accountAgeDays+' days)', tag:'warn', text:'MODERATE' });
+  else                          factors.push({ icon:'🗓️', label:'Mature account ('+raw.accountAgeDays+' days)', tag:'ok',   text:'OK' });
+
+  if (raw.numTxns24h > 8)      factors.push({ icon:'⚡', label:'High velocity ('+raw.numTxns24h+' txns today)', tag:'bad',  text:'HIGH RISK' });
+  else if (raw.numTxns24h > 4) factors.push({ icon:'⚡', label:'Elevated velocity ('+raw.numTxns24h+' txns today)', tag:'warn', text:'MODERATE' });
+  else                         factors.push({ icon:'⚡', label:'Normal velocity ('+raw.numTxns24h+' txns today)', tag:'ok',   text:'OK' });
+
+  return factors;
+}
+
+const NEXT_STEPS = {
+  BLOCK: [
+    { strong: 'Decline the transaction immediately', rest: ' — do not process the payment.' },
+    { strong: 'Freeze the card', rest: ' to prevent further unauthorized use.' },
+    { strong: 'Alert the cardholder', rest: ' via SMS/email and ask them to confirm identity.' },
+    { strong: 'File a fraud report', rest: ' and flag the transaction in the fraud case system.' },
+    { strong: 'Trigger a chargeback review', rest: ' if funds were already moved.' },
+  ],
+  REVIEW: [
+    { strong: 'Hold the transaction', rest: ' for up to 24 hours pending manual review.' },
+    { strong: 'Assign to a fraud analyst', rest: ' to examine the account history.' },
+    { strong: 'Send a step-up challenge', rest: ' — ask the customer to verify via OTP or biometric.' },
+    { strong: 'Check linked accounts', rest: ' for similar patterns or shared device fingerprints.' },
+    { strong: 'Approve or decline', rest: ' once manual review is complete.' },
+  ],
+  APPROVE: [
+    { strong: 'Process the transaction', rest: ' — risk is within acceptable limits.' },
+    { strong: 'Log for model feedback', rest: ' — approved transactions feed the next model retraining cycle.' },
+    { strong: 'Continue passive monitoring', rest: ' on this account for the next 24h.' },
+  ],
+};
+
+function renderResult(r, raw) {
+  const pct = (r.fraudProbability * 100).toFixed(1);
+  const dec = r.decision;
+  const color = dec === 'APPROVE' ? 'var(--approve)' : dec === 'REVIEW' ? 'var(--review)' : 'var(--block)';
+  const cls = dec.toLowerCase();
+
+  const factors = riskFactors(raw);
+  const factorsHtml = factors.map(f => `
+    <div class="rf-item">
+      <div class="rf-icon">${f.icon}</div>
+      <div class="rf-label">${f.label}</div>
+      <span class="rf-tag ${f.tag}">${f.text}</span>
+    </div>
+  `).join('');
+
+  const steps = NEXT_STEPS[dec];
+  const stepsHtml = steps.map((s, i) => `
+    <div class="ns-item">
+      <div class="ns-num ${cls}">${i+1}</div>
+      <div class="ns-text"><strong>${s.strong}</strong>${s.rest}</div>
+    </div>
+  `).join('');
+
+  $('result').innerHTML = `
+    <div class="decision-result">
+      <div class="verdict ${dec}">${dec}</div>
+      <div class="verdict-reason">${r.reason}</div>
+
+      <div class="prob-line"><span>Fraud probability</span><span class="prob-val">${pct}%</span></div>
+      <div class="meter"><div style="width:${pct}%;background:${color}"></div></div>
+      <div class="threshold-marks">
+        <span class="mark" style="left:50%">50%</span>
+        <span class="mark" style="left:80%">80%</span>
+      </div>
+      <div class="txid">txn id: ${r.transactionId}</div>
+
+      <hr class="divider" />
+
+      <div class="risk-factors">
+        <div class="rf-title">Risk signal breakdown</div>
+        ${factorsHtml}
+      </div>
+
+      <hr class="divider" />
+
+      <div class="next-steps">
+        <div class="ns-title">Recommended next steps</div>
+        ${stepsHtml}
+      </div>
+    </div>
+  `;
+}
+</script>
 </body>
 </html>
