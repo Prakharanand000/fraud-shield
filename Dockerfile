@@ -9,7 +9,7 @@ RUN pip install --no-cache-dir -r requirements.txt && \
 # Train model at build time so it ships baked into the image
 COPY ml-service/ ml-service/
 RUN python ml-service/train_model.py && \
-    mv ml-service/fraud_model.joblib ml-service/fraud_model.joblib
+    mv fraud_model.joblib ml-service/fraud_model.joblib
 
 # Copy rest of the project
 COPY quickstart.py quickstart-requirements.txt ./
