@@ -126,5 +126,6 @@ app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 if __name__ == "__main__":
     import uvicorn
 
-    print("\n  FraudShield quickstart -> http://localhost:8080\n")
-    uvicorn.run(app, host="0.0.0.0", port=8080)
+    port = int(os.getenv("PORT", "8080"))
+    print(f"\n  FraudShield quickstart -> http://localhost:{port}\n")
+    uvicorn.run(app, host="0.0.0.0", port=port)
