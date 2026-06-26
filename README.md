@@ -11,8 +11,8 @@ This mirrors a common production pattern: the business/API tier is written in a
 strongly-typed JVM language for reliability and throughput, while the model is
 served from Python where the ML ecosystem lives. The two communicate over HTTP.
 
-A small **web UI** (served at `/`) lets you score transactions from the browser
-- enter the transaction details, hit *Assess risk*, and see the
+A small **web UI** (served at `/`) lets you score transactions from the browser: 
+enter the transaction details, hit *Assess risk*, and see the
 BLOCK / REVIEW / APPROVE decision with the model's fraud probability.
 
 ## Two ways to run it
