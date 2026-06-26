@@ -1,0 +1,12 @@
+# Dependencies for the no-Docker quickstart (quickstart.py).
+#
+# These are intentionally loose so they resolve to current wheels on a modern
+# local Python (3.11–3.13). The Docker ML service uses the pinned, reproducible
+# versions in ml-service/requirements.txt (built on Python 3.11) instead.
+scikit-learn>=1.5
+numpy>=2.1
+pandas>=2.2
+joblib>=1.4
+fastapi>=0.110
+uvicorn[standard]>=0.29
+pydantic>=2.7

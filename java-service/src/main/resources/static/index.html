@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FraudShield — Real-time Transaction Risk Scoring</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #141b32;
+      --panel-2: #1b2542;
+      --text: #e8edf7;
+      --muted: #93a0c0;
+      --border: #27325a;
+      --accent: #5b8cff;
+      --approve: #2bd4a0;
+      --review: #f6b73c;
+      --block: #ff5d6c;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: radial-gradient(1200px 600px at 70% -10%, #1a2348 0%, transparent 60%), var(--bg);
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    .wrap { max-width: 880px; margin: 0 auto; padding: 40px 20px 64px; }
+    header { margin-bottom: 28px; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .logo {
+      width: 40px; height: 40px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent), #9d6bff);
+      display: grid; place-items: center; font-size: 22px;
+    }
+    h1 { font-size: 24px; margin: 0; letter-spacing: -0.02em; }
+    .sub { color: var(--muted); font-size: 14px; margin-top: 4px; }
+    .grid {
+      display: grid; grid-template-columns: 1.1fr 1fr; gap: 20px;
+    }
+    @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
+    .card {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 16px; padding: 22px;
+    }
+    .card h2 { font-size: 14px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 0 0 16px; }
+    .field { margin-bottom: 14px; }
+    label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+    input, select {
+      width: 100%; padding: 10px 12px; border-radius: 10px;
+      background: var(--panel-2); border: 1px solid var(--border);
+      color: var(--text); font-size: 14px; outline: none;
+    }
+    input:focus, select:focus { border-color: var(--accent); }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .actions { display: flex; gap: 10px; margin-top: 18px; }
+    button {
+      flex: 1; padding: 12px 16px; border-radius: 10px; border: none;
+      font-size: 14px; font-weight: 600; cursor: pointer;
+      background: var(--accent); color: white; transition: filter .15s;
+    }
+    button:hover { filter: brightness(1.08); }
+    button.ghost { background: var(--panel-2); color: var(--text); border: 1px solid var(--border); }
+    .preset-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+    .chip {
+      font-size: 12px; padding: 6px 11px; border-radius: 999px; cursor: pointer;
+      background: var(--panel-2); border: 1px solid var(--border); color: var(--muted);
+    }
+    .chip:hover { color: var(--text); border-color: var(--accent); }
+    .result-empty { color: var(--muted); font-size: 14px; line-height: 1.6; }
+    .decision {
+      font-size: 30px; font-weight: 800; letter-spacing: -0.02em; margin: 4px 0 2px;
+    }
+    .decision.APPROVE { color: var(--approve); }
+    .decision.REVIEW { color: var(--review); }
+    .decision.BLOCK { color: var(--block); }
+    .reason { color: var(--muted); font-size: 14px; margin-bottom: 18px; }
+    .meter { height: 12px; border-radius: 999px; background: var(--panel-2); overflow: hidden; border: 1px solid var(--border); }
+    .meter > div { height: 100%; transition: width .5s ease; }
+    .prob-line { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); margin: 14px 0 6px; }
+    .prob-val { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--text); }
+    .txid { font-size: 12px; color: var(--muted); margin-top: 16px; font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+    .err { color: var(--block); font-size: 13px; margin-top: 12px; }
+    footer { margin-top: 28px; color: var(--muted); font-size: 12px; text-align: center; line-height: 1.7; }
+    code { background: var(--panel-2); padding: 2px 6px; border-radius: 6px; font-size: 12px; }
+    .spinner {
+      display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,.4);
+      border-top-color: white; border-radius: 50%; animation: spin .7s linear infinite; vertical-align: -2px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo">🛡️</div>
+        <div>
+          <h1>FraudShield</h1>
+          <div class="sub">Real-time transaction risk scoring · Spring Boot + ML</div>
+        </div>
+      </div>
+    </header>
+
+    <div class="grid">
+      <div class="card">
+        <h2>Transaction</h2>
+        <div class="preset-row">
+          <span class="chip" data-preset="low">↘ Low-risk example</span>
+          <span class="chip" data-preset="high">↗ High-risk example</span>
+        </div>
+        <form id="txn-form">
+          <div class="row">
+            <div class="field">
+              <label>Transaction ID</label>
+              <input id="transactionId" value="txn-001" />
+            </div>
+            <div class="field">
+              <label>Amount</label>
+              <input id="amount" type="number" step="0.01" value="850" />
+            </div>
+          </div>
+          <div class="row">
+            <div class="field">
+              <label>Merchant category (0–9)</label>
+              <input id="merchantCategory" type="number" min="0" max="9" value="4" />
+            </div>
+            <div class="field">
+              <label>Hour of day (0–23)</label>
+              <input id="hourOfDay" type="number" min="0" max="23" value="3" />
+            </div>
+          </div>
+          <div class="row">
+            <div class="field">
+              <label>Days since last txn</label>
+              <input id="daysSinceLastTxn" type="number" min="0" value="1" />
+            </div>
+            <div class="field">
+              <label>Txns in last 24h</label>
+              <input id="numTxns24h" type="number" min="0" value="9" />
+            </div>
+          </div>
+          <div class="row">
+            <div class="field">
+              <label>Account age (days)</label>
+              <input id="accountAgeDays" type="number" min="0" value="12" />
+            </div>
+            <div class="field">
+              <label>Cross-border?</label>
+              <select id="isForeign">
+                <option value="true">Yes (foreign)</option>
+                <option value="false">No (domestic)</option>
+              </select>
+            </div>
+          </div>
+          <div class="actions">
+            <button type="submit" id="submit-btn">Assess risk</button>
+            <button type="button" class="ghost" id="reset-btn">Reset</button>
+          </div>
+          <div class="err" id="error"></div>
+        </form>
+      </div>
+
+      <div class="card">
+        <h2>Decision</h2>
+        <div id="result">
+          <div class="result-empty">
+            Enter a transaction and click <strong>Assess risk</strong>.<br /><br />
+            The request is scored by the ML model, then the API applies the risk
+            policy:<br />
+            <code>≥ 0.80 → BLOCK</code><br />
+            <code>≥ 0.50 → REVIEW</code><br />
+            <code>&lt; 0.50 → APPROVE</code>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      Polyglot microservice demo · Java API tier → Python ML inference · containerized with Docker, orchestrated on Kubernetes.<br />
+      API endpoint: <code>POST /api/v1/assess</code>
+    </footer>
+  </div>
+
+  <script>
+    // Same-origin by default (works for both the Docker/Spring stack on :8080
+    // and the no-Docker quickstart). Override with ?api=http://host:port if needed.
+    const API_BASE = new URLSearchParams(location.search).get("api") || "";
+
+    const presets = {
+      low: { transactionId: "txn-low-01", amount: 42.5, merchantCategory: 2, hourOfDay: 14,
+             daysSinceLastTxn: 3, numTxns24h: 2, accountAgeDays: 900, isForeign: "false" },
+      high: { transactionId: "txn-high-01", amount: 1850, merchantCategory: 7, hourOfDay: 3,
+              daysSinceLastTxn: 0, numTxns24h: 11, accountAgeDays: 8, isForeign: "true" },
+    };
+
+    const $ = (id) => document.getElementById(id);
+    const fields = ["transactionId","amount","merchantCategory","hourOfDay",
+                    "daysSinceLastTxn","numTxns24h","accountAgeDays","isForeign"];
+
+    function applyPreset(name) {
+      const p = presets[name];
+      for (const k in p) $(k).value = p[k];
+    }
+
+    document.querySelectorAll(".chip").forEach((c) =>
+      c.addEventListener("click", () => applyPreset(c.dataset.preset))
+    );
+
+    $("reset-btn").addEventListener("click", () => applyPreset("high"));
+
+    $("txn-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      $("error").textContent = "";
+      const btn = $("submit-btn");
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span> Scoring…';
+
+      const payload = {
+        transactionId: $("transactionId").value,
+        amount: parseFloat($("amount").value),
+        merchantCategory: parseInt($("merchantCategory").value, 10),
+        hourOfDay: parseInt($("hourOfDay").value, 10),
+        daysSinceLastTxn: parseInt($("daysSinceLastTxn").value, 10),
+        numTxns24h: parseInt($("numTxns24h").value, 10),
+        isForeign: $("isForeign").value === "true",
+        accountAgeDays: parseInt($("accountAgeDays").value, 10),
+      };
+
+      try {
+        const res = await fetch(API_BASE + "/api/v1/assess", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) throw new Error("API returned " + res.status);
+        renderResult(await res.json());
+      } catch (err) {
+        $("error").textContent =
+          "Could not reach the scoring API. Is the service running? (" + err.message + ")";
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Assess risk";
+      }
+    });
+
+    function renderResult(r) {
+      const pct = (r.fraudProbability * 100).toFixed(1);
+      const color = r.decision === "APPROVE" ? "var(--approve)"
+                  : r.decision === "REVIEW" ? "var(--review)" : "var(--block)";
+      $("result").innerHTML = `
+        <div class="decision ${r.decision}">${r.decision}</div>
+        <div class="reason">${r.reason}</div>
+        <div class="prob-line"><span>Fraud probability</span><span class="prob-val">${pct}%</span></div>
+        <div class="meter"><div style="width:${pct}%;background:${color}"></div></div>
+        <div class="txid">txn: ${r.transactionId}</div>
+      `;
+    }
+  </script>
+</body>
+</html>

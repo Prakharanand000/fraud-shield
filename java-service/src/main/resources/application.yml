@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: fraud-shield
+
+server:
+  port: 8080
+
+# URL of the Python ML inference service. Overridden via ML_SERVICE_URL in
+# Docker Compose and Kubernetes; defaults to localhost for bare-metal runs.
+ml:
+  service:
+    url: ${ML_SERVICE_URL:http://localhost:8000}
+
+# Risk decision thresholds. Tune per environment without recompiling.
+risk:
+  threshold:
+    block: 0.80
+    review: 0.50
+
+# Actuator exposes Kubernetes-style liveness/readiness probes consumed by the
+# k8s deployment manifests.
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: always
